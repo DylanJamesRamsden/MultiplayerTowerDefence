@@ -24,8 +24,10 @@ protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
+	// Moves the character either forwards or backwards, depending on if Value is 1 or -1
 	void MoveForward(float Value);
 
+	// Moves the character either right or left, depending on if Value is 1 or -1
 	void MoveRight(float Value);
 	
 public:	
