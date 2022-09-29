@@ -32,12 +32,16 @@ protected:
 	
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
-
+	
+	// ~Begin Movement
+	
 	// Moves the character either forwards or backwards, depending on if Value is 1 or -1
 	void MoveForward(float Value);
 
 	// Moves the character either right or left, depending on if Value is 1 or -1
 	void MoveRight(float Value);
+	
+	// ~END Movement
 	
 public:	
 	// Called every frame
@@ -46,6 +50,7 @@ public:
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
+	//~ Begin APawn Interface.
 	virtual void PossessedBy(AController* NewController) override;
-
+	//~ End APawn Interface.
 };

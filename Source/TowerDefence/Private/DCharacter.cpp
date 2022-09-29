@@ -6,6 +6,7 @@
 #include "Camera/CameraComponent.h"
 #include "Components/ArrowComponent.h"
 #include "GameFramework/SpringArmComponent.h"
+#include "Kismet/KismetMathLibrary.h"
 
 // Sets default values
 ADCharacter::ADCharacter()
@@ -13,6 +14,7 @@ ADCharacter::ADCharacter()
  	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 	bReplicates = true;
+	bUseControllerRotationYaw = true;
 
 	// Creating components
 	StaticMeshComponent = CreateDefaultSubobject<UStaticMeshComponent>("StaticMeshComponent");
@@ -45,12 +47,12 @@ void ADCharacter::BeginPlay()
 
 void ADCharacter::MoveForward(float Value)
 {
-	AddMovementInput(FVector::ForwardVector * Value);
+	AddMovementInput(GetActorForwardVector() * Value);
 }
 
 void ADCharacter::MoveRight(float Value)
 {
-	AddMovementInput(FVector::RightVector * Value);
+	AddMovementInput(GetActorRightVector() * Value);
 }
 
 // Called every frame
@@ -58,6 +60,26 @@ void ADCharacter::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
+	// Doing the rotation locally to prevent any delay when rotation your own character
+	if (HasLocalNetOwner())
+	{
+		if (APlayerController* PC = Cast<APlayerController>(GetController()))
+		{
+			FVector MouseWorldLocation;
+			FVector MouseWorldDirection;
+			PC->DeprojectMousePositionToWorld(MouseWorldLocation, MouseWorldDirection);
+
+			// Using a line plane intersection rather than a line trace because I just find it simpler and nothing can
+			// obstruct the line check (e.g. props such as a building)
+			FVector PlaneIntersectionLocation = FMath::LinePlaneIntersection(MouseWorldLocation, MouseWorldLocation + (MouseWorldDirection * 10000),
+				GetActorLocation(), FVector(0, 0, 1.0f));
+
+			FRotator LookRotation = UKismetMathLibrary::FindLookAtRotation(GetActorLocation(), PlaneIntersectionLocation);
+
+			// Use control rotation because the player controller is already repped, so there shouldn't be any major extra replication costs
+			PC->SetControlRotation(LookRotation);
+		}
+	}
 }
 
 // Called to bind functionality to input
@@ -76,7 +98,8 @@ void ADCharacter::PossessedBy(AController* NewController)
 	// When the character is possessed locally, we set it as the PlayerController's view view target
 	if (APlayerController* PC = Cast<APlayerController>(NewController))
 	{
-		if (PC->HasLocalNetOwner()) PC->SetViewTarget(this);
+		//if (PC->HasLocalNetOwner())
+			PC->SetViewTarget(this);
 	}
 }
 
