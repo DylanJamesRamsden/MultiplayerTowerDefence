@@ -11,6 +11,12 @@
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
+  <component name="HighlightingSettingsPerFile">
+    <setting file="file://$PROJECT_DIR$/Source/TowerDefence/Private/DGameplayGameMode.cpp" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Source/TowerDefence/Private/DPlayerController.cpp" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Source/TowerDefence/Public/DGameplayGameMode.h" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Source/TowerDefence/Public/DPlayerController.h" root0="FORCE_HIGHLIGHTING" />
+  </component>
   <component name="MarkdownSettingsMigration">
     <option name="stateVersion" value="1" />
   </component>
@@ -151,7 +157,7 @@
       <option name="presentableId" value="Default" />
       <updated>1664460721861</updated>
       <workItem from="1664460738857" duration="313000" />
-      <workItem from="1664461284832" duration="1694000" />
+      <workItem from="1664461284832" duration="4054000" />
     </task>
     <servers />
   </component>
