@@ -2,3 +2,8 @@
 
 
 #include "DPlayerController.h"
+
+ADPlayerController::ADPlayerController()
+{
+	bShowMouseCursor = true;
+}

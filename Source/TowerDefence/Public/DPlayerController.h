@@ -13,4 +13,7 @@ UCLASS()
 class TOWERDEFENCE_API ADPlayerController : public APlayerController
 {
 	GENERATED_BODY()
+
+public:
+	ADPlayerController();
 };
