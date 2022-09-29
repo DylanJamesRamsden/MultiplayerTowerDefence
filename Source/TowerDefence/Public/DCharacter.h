@@ -6,6 +6,9 @@
 #include "GameFramework/Character.h"
 #include "DCharacter.generated.h"
 
+class USpringArmComponent;
+class UCameraComponent;
+
 UCLASS()
 class TOWERDEFENCE_API ADCharacter : public ACharacter
 {
@@ -20,6 +23,12 @@ protected:
 	// @TODO Remove once we have a SkeletalMesh we want to use
 	UPROPERTY(EditDefaultsOnly)
 	UStaticMeshComponent* StaticMeshComponent;
+
+	UPROPERTY(EditDefaultsOnly)
+	USpringArmComponent* SpringArmComponent;
+
+	UPROPERTY(EditDefaultsOnly)
+	UCameraComponent* CameraComponent;
 	
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
@@ -36,5 +45,7 @@ public:
 
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
+
+	virtual void PossessedBy(AController* NewController) override;
 
 };
