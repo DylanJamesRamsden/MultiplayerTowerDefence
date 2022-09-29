@@ -95,11 +95,10 @@ void ADCharacter::PossessedBy(AController* NewController)
 {
 	Super::PossessedBy(NewController);
 
-	// When the character is possessed locally, we set it as the PlayerController's view view target
+	// When the character is possessed locally, we set it as the PlayerController's view target
 	if (APlayerController* PC = Cast<APlayerController>(NewController))
 	{
-		//if (PC->HasLocalNetOwner())
-			PC->SetViewTarget(this);
+		PC->SetViewTarget(this);
 	}
 }
 
