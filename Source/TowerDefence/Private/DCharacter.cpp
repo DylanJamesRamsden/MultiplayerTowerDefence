@@ -30,6 +30,7 @@ ADCharacter::ADCharacter()
 	SpringArmComponent->SetRelativeRotation(FRotator(-70.0f, 0.0f, 0.0f));
 	SpringArmComponent->SetUsingAbsoluteRotation(true);
 	SpringArmComponent->TargetArmLength = 1200.0f;
+	SpringArmComponent->bDoCollisionTest = false;
 
 	// TMP Just so I can see the forward direction with the temp cube as the character mesh
 	// @TODO Remove this once we have a SkeletalMesh
