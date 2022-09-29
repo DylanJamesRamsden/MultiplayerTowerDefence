@@ -16,13 +16,17 @@ public:
 	ADCharacter();
 
 protected:
-	// Called when the game starts or when spawned
-	virtual void BeginPlay() override;
-
 	// TMP: Just using as a place holder for now, so I can use a cube as our character mesh
 	// @TODO Remove once we have a SkeletalMesh we want to use
 	UPROPERTY(EditDefaultsOnly)
 	UStaticMeshComponent* StaticMeshComponent;
+	
+	// Called when the game starts or when spawned
+	virtual void BeginPlay() override;
+
+	void MoveForward(float Value);
+
+	void MoveRight(float Value);
 	
 public:	
 	// Called every frame
