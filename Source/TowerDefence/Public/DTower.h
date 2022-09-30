@@ -27,7 +27,8 @@ protected:
 	UPROPERTY(EditDefaultsOnly)
 	UStaticMeshComponent* BarrelMeshComponent;
 
-	// Might sway away from using a USphereComponent eventually for detecting enemies
+	// Might sway away from using a USphereComponent eventually for handling a towers radius, just seems like the
+	// simplest approach for now
 	UPROPERTY(EditAnywhere)
 	USphereComponent* DetectionRadiusComponent;
 	
