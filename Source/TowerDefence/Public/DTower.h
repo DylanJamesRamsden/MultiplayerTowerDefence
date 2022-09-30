@@ -6,6 +6,8 @@
 #include "GameFramework/Actor.h"
 #include "DTower.generated.h"
 
+class USphereComponent;
+
 UCLASS()
 class TOWERDEFENCE_API ADTower : public AActor
 {
@@ -17,13 +19,17 @@ public:
 
 protected:
 	UPROPERTY(EditDefaultsOnly)
-	UStaticMeshComponent* TurretBaseMesh;
+	UStaticMeshComponent* TurretBaseMeshComponent;
 
 	UPROPERTY(EditDefaultsOnly)
-	UStaticMeshComponent* BarrelBaseMesh;
+	UStaticMeshComponent* BarrelBaseMeshComponent;
 
 	UPROPERTY(EditDefaultsOnly)
-	UStaticMeshComponent* BarrelMesh;
+	UStaticMeshComponent* BarrelMeshComponent;
+
+	// Might sway away from using a USphereComponent eventually for detecting enemies
+	UPROPERTY(EditAnywhere)
+	USphereComponent* DetectionRadiusComponent;
 	
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
