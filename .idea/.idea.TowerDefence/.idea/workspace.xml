@@ -14,8 +14,10 @@
   <component name="HighlightingSettingsPerFile">
     <setting file="file://$PROJECT_DIR$/Source/TowerDefence/Private/DGameplayGameMode.cpp" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Source/TowerDefence/Private/DPlayerController.cpp" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Source/TowerDefence/Private/DTurret.cpp" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Source/TowerDefence/Public/DGameplayGameMode.h" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Source/TowerDefence/Public/DPlayerController.h" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Source/TowerDefence/Public/DTurret.h" root0="FORCE_HIGHLIGHTING" />
   </component>
   <component name="MarkdownSettingsMigration">
     <option name="stateVersion" value="1" />
@@ -159,6 +161,7 @@
       <workItem from="1664460738857" duration="313000" />
       <workItem from="1664461284832" duration="9925000" />
       <workItem from="1664492938593" duration="508000" />
+      <workItem from="1664548022564" duration="816000" />
     </task>
     <servers />
   </component>
