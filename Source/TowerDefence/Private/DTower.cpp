@@ -58,7 +58,10 @@ void ADTower::OnEnterDetectionRadius(UPrimitiveComponent* OverlappedComponent, A
 void ADTower::OnExitDetectionRadius(UPrimitiveComponent* OverlappedComp, AActor* OtherActor,
 	UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
 {
-	if (EnemyTarget) EnemyTarget = nullptr;
+	if (EnemyTarget)
+	{
+		if (EnemyTarget == OtherActor) EnemyTarget = nullptr;
+	}
 }
 
 // Called every frame
