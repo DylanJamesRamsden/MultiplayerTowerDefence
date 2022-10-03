@@ -4,6 +4,7 @@
 #include "DTower.h"
 
 #include "Components/SphereComponent.h"
+#include "Kismet/KismetMathLibrary.h"
 
 // Sets default values
 ADTower::ADTower()
@@ -41,7 +42,23 @@ ADTower::ADTower()
 void ADTower::BeginPlay()
 {
 	Super::BeginPlay();
-	
+
+	DetectionRadiusComponent->OnComponentBeginOverlap.AddDynamic(this, &ADTower::OnEnterDetectionRadius);
+	DetectionRadiusComponent->OnComponentEndOverlap.AddDynamic(this, &ADTower::OnExitDetectionRadius);
+}
+
+void ADTower::OnEnterDetectionRadius(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,
+	UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
+{
+	// Could only store the EnemyTarget on authority, but there may be some cosmetic stuff I want to do locally, so also
+	// want to store it locally just in case
+	if (OtherActor) EnemyTarget = OtherActor;
+}
+
+void ADTower::OnExitDetectionRadius(UPrimitiveComponent* OverlappedComp, AActor* OtherActor,
+	UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
+{
+	if (EnemyTarget) EnemyTarget = nullptr;
 }
 
 // Called every frame
@@ -49,5 +66,41 @@ void ADTower::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
+	// Leaving the rotation of the barrel and it's base to the server to just sync it up with all clients
+	if (HasAuthority())
+	{
+		if (EnemyTarget)
+		{
+			// Using the world rotation as the current for the BarrelBaseMeshComponent
+			FRotator BarrelBaseCurrentRotation = BarrelBaseMeshComponent->GetComponentRotation();
+			// Using the relative rotation as the current for the BarrelMeshComponent as it needs to rotate with the
+			// BarrelBaseMeshComponent and only adjust it's pitch
+			FRotator BarrelCurrentRotation = BarrelMeshComponent->GetRelativeRotation();
+		
+			FRotator BarrelBaseLookRotation = UKismetMathLibrary::FindLookAtRotation(BarrelBaseMeshComponent->GetComponentLocation(),
+				EnemyTarget->GetActorLocation());
+			FRotator BarrelLookRotation = UKismetMathLibrary::FindLookAtRotation(BarrelMeshComponent->GetComponentLocation(),
+				EnemyTarget->GetActorLocation());
+
+			// When updating the rotation of the BarrelBaseMeshComponent, we update it's world rotation
+			BarrelBaseMeshComponent->SetWorldRotation(FRotator(BarrelBaseCurrentRotation.Pitch, BarrelBaseLookRotation.Yaw, BarrelBaseCurrentRotation.Roll));
+			// When updating the rotation of the BarrelMeshComponent, we update it's relative rotation as we want it to
+			// still rotate relatively with the BarrelBaseMeshComponent 
+			BarrelMeshComponent->SetRelativeRotation(FRotator(BarrelLookRotation.Pitch, BarrelCurrentRotation.Yaw, BarrelCurrentRotation.Roll));
+		}
+	}
+
+	if (bDebuggingEnabled)
+	{
+		// Just some debug arrows to visualize the rotations being applied
+		DrawDebugDirectionalArrow(GetWorld(), BarrelBaseMeshComponent->GetComponentLocation(),
+			BarrelBaseMeshComponent->GetComponentLocation() + (BarrelBaseMeshComponent->GetForwardVector() * 300),5.0f, FColor::Purple);
+		DrawDebugDirectionalArrow(GetWorld(), BarrelMeshComponent->GetComponentLocation(),
+			BarrelMeshComponent->GetComponentLocation() + (BarrelMeshComponent->GetForwardVector() * 300),5.0f, FColor::Cyan);
+
+		// Just a debug cylinder visualizing the turrets radius, TMP until I bring in a decal for a turrets radius
+		DrawDebugCylinder(GetWorld(), GetActorLocation(), TurretBaseMeshComponent->GetComponentLocation(), DetectionRadiusComponent->GetScaledSphereRadius(),
+			12.0f, FColor::Orange, false, -1, 0, 15.0f);	
+	}
 }
 

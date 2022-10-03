@@ -29,11 +29,26 @@ protected:
 
 	// Might sway away from using a USphereComponent eventually for handling a towers radius, just seems like the
 	// simplest approach for now
-	UPROPERTY(EditAnywhere)
+	UPROPERTY(EditDefaultsOnly)
 	USphereComponent* DetectionRadiusComponent;
+
+	// Stores a reference to the Enemy target in range
+	UPROPERTY()
+	AActor* EnemyTarget;
+
+	// Determines whether or not to draw and print debug data for a turret
+	UPROPERTY(EditAnywhere)
+	bool bDebuggingEnabled = true;
 	
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
+
+	UFUNCTION()
+	void OnEnterDetectionRadius(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, 
+								int32 OtherBodyIndex, bool bFromSweep, const FHitResult &SweepResult);
+
+	UFUNCTION()
+	void OnExitDetectionRadius(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex);
 
 public:	
 	// Called every frame
