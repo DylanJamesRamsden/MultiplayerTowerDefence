@@ -42,9 +42,6 @@ ADTower::ADTower()
 void ADTower::BeginPlay()
 {
 	Super::BeginPlay();
-
-	DetectionRadiusComponent->OnComponentBeginOverlap.AddDynamic(this, &ADTower::OnEnterDetectionRadius);
-	DetectionRadiusComponent->OnComponentEndOverlap.AddDynamic(this, &ADTower::OnExitDetectionRadius);
 }
 
 // Called every frame
