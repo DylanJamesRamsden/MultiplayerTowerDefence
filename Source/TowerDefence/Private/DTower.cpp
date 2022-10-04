@@ -47,23 +47,6 @@ void ADTower::BeginPlay()
 	DetectionRadiusComponent->OnComponentEndOverlap.AddDynamic(this, &ADTower::OnExitDetectionRadius);
 }
 
-void ADTower::OnEnterDetectionRadius(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,
-	UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
-{
-	// Could only store the EnemyTarget on authority, but there may be some cosmetic stuff I want to do locally, so also
-	// want to store it locally just in case
-	if (OtherActor) EnemyTarget = OtherActor;
-}
-
-void ADTower::OnExitDetectionRadius(UPrimitiveComponent* OverlappedComp, AActor* OtherActor,
-	UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
-{
-	if (EnemyTarget)
-	{
-		if (EnemyTarget == OtherActor) EnemyTarget = nullptr;
-	}
-}
-
 // Called every frame
 void ADTower::Tick(float DeltaTime)
 {
@@ -104,6 +87,27 @@ void ADTower::Tick(float DeltaTime)
 		// Just a debug cylinder visualizing the turrets radius, TMP until I bring in a decal for a turrets radius
 		DrawDebugCylinder(GetWorld(), GetActorLocation(), TurretBaseMeshComponent->GetComponentLocation(), DetectionRadiusComponent->GetScaledSphereRadius(),
 			12.0f, FColor::Orange, false, -1, 0, 15.0f);	
+	}
+}
+
+void ADTower::NotifyActorBeginOverlap(AActor* OtherActor)
+{
+	Super::NotifyActorBeginOverlap(OtherActor);
+
+	// Could only store the EnemyTarget on authority, but there may be some cosmetic stuff I want to do locally, so also
+	// want to store it locally just in case
+	// Also only setting enemy target if the tower does not have one.
+	if (!EnemyTarget) EnemyTarget = OtherActor;
+}
+
+void ADTower::NotifyActorEndOverlap(AActor* OtherActor)
+{
+	Super::NotifyActorEndOverlap(OtherActor);
+
+	if (EnemyTarget)
+	{
+		// @TODO Need to queue up all enemies in range so if the tower does lose it's current enemy target, just pull one from the queue
+		if (EnemyTarget == OtherActor) EnemyTarget = nullptr;
 	}
 }
 
